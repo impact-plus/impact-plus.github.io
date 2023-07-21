@@ -29,7 +29,7 @@
           <strong class="text-blue-500 float-right">{{ label }}</strong>
         </div>
         <div class="border-l-4 pl-2">
-          <slot></slot>
+          <p><slot></slot></p>
           <em class="text-sm text-gray-400">{{ description }}</em>
         </div>
       `
@@ -137,7 +137,7 @@
     </image-wrapper>
 
     <specs-wrapper>
-      <row-component v-for="spec in specs" :label="spec.label">
+      <row-component v-for="spec in specs" :label="spec.label" :description="spec.description">
         {{ spec.value }}
       </row-component>
     </specs-wrapper>
