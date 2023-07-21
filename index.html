@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello, World!</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/vue@next"></script>
+
+  <script type="module">
+    const SpecsWrapper = {
+      template: `<div class="grid grid-cols-2 gap-4"><slot></slot></div>`
+    }
+
+    const ImageWrapper = {
+      template: `<div class="grid grid-cols-3 gap-4 mb-12"><slot></slot></div>`
+    }
+    const ImageComponent = {
+      props: ['src'],
+      template: `<div><img :src="src" class="rounded-lg" /></div>`
+    }
+
+    const RowComponent = {
+      props: ['label', 'description'],
+      template: `
+        <div class="border-b border-blue-500">
+          <strong class="text-blue-500 float-right">{{ label }}</strong>
+        </div>
+        <div class="border-l-4 pl-2">
+          <slot></slot>
+          <em class="text-sm text-gray-400">{{ description }}</em>
+        </div>
+      `
+    }
+
+    const LogoComponent = {
+      template: `
+        <div class="w-full bg-blue-500 p-8 mb-4 rounded-lg">
+          <h1 class="text-4xl text-white">IMPACT+</h1>
+        </div>
+      `
+    }
+
+    const images = [
+      'https://bit.ly/sayuki-side',
+      'https://bit.ly/sayuki-front',
+      'https://bit.ly/sayuki-back'
+    ]
+
+    const specs = [
+      {
+        label: 'Base',
+        value: '1996 Honda Civic 1.4i (EJ9), PB-74P Amethyst Blue Pearl'
+      },
+      {
+        label: 'Donor',
+        value: '1997 Honda Civic 1.6VTi (EK4), B-74P Adriatic Blue Pearl',
+        description: 'Swapped out all parts but: A/C, ABS, Power Windows, Upholstery'
+      },
+      {
+        label: 'Weight',
+        value: '1048 kg'
+      },
+      {
+        label: 'Engine',
+        value: 'B16A2 @ 169hp / 154Nm'
+      },
+      {
+        label: 'Transmission',
+        value: '1998 Integra Type R (DC2) S80, 5-speed, LSD, 4.785 final drive'
+      },
+      {
+        label: 'Shocks',
+        value: 'Koni S.TRT (Orange)'
+      },
+      {
+        label: 'Springs',
+        value: 'H&R Sport -44mm'
+      },
+      {
+        label: 'Brake Rotors',
+        value: 'Brembo XTRA 262mm'
+      },
+      {
+        label: 'Brake Pads',
+        value: 'Ferodo FDS776'
+      },
+      {
+        label: 'Rims',
+        value: '15" Black Enkei (Uknown Model)'
+      },
+      {
+        label: 'Tires',
+        value: '205/50/R15 Federal 595RS-PRO'
+      },
+      {
+        label: 'Steering Wheel',
+        value: '2001 Honda Civic Type R (EP3)'
+      },
+      {
+        label: 'Seats',
+        value: 'Sparco Sprint MY19 (Red)'
+      },
+      {
+        label: 'Harnesses',
+        value: 'QMS 4-Point, 2" (Red), Harness Bar Staffa'
+      }
+    ]
+
+    const app = Vue.createApp({
+      components: {
+        'image-component': ImageComponent,
+        'image-wrapper':   ImageWrapper,
+        'row-component':   RowComponent,
+        'logo-component':  LogoComponent,
+        'specs-wrapper':   SpecsWrapper
+      },
+      data() {
+        return {
+          images: images,
+          specs: specs
+        }
+      }
+    })
+
+    app.mount('#app');
+  </script>
+</head>
+
+<body class="text-white bg-black">
+  <div id="app" class="p-8">
+    <logo-component></logo-component>
+    <image-wrapper>
+      <image-component v-for="image in images" :src="image"></image-component>
+    </image-wrapper>
+
+    <specs-wrapper>
+      <row-component v-for="spec in specs" :label="spec.label">
+        {{ spec.value }}
+      </row-component>
+    </specs-wrapper>
+  </div>
+</body>
+
+</html>
