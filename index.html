@@ -74,7 +74,7 @@
 
     const ImageComponent = {
       props: ['src'],
-      template: `<div><img :src="src" class="rounded-lg" @click="handleClick"/></div>`,
+      template: `<div><img :src="src" class="rounded-lg cursor-pointer" @click="handleClick"/></div>`,
       methods: {
         handleClick() {
           toggleFullImage()
@@ -85,7 +85,7 @@
     const ImageContainer = {
       template: `
         <div id="image-container" @click="handleClick" class="fixed inset-0 z-100 hidden">
-          <img id="full-image" class="w-full h-full object-contain" />
+          <img id="full-image" class="w-full h-full object-contain cursor-pointer" />
         </div>
       `,
       methods: {
@@ -148,13 +148,6 @@
 
     app.mount('#app')
   </script>
-
-  <style>
-    #image-contaner {
-      width: 100%;
-      height: 100%;
-    }
-  </style>
 </body>
 
 </html>
