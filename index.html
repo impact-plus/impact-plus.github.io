@@ -28,21 +28,27 @@
   </div>
 
   <script>
-    const { createApp, ref } = Vue
+    const getLocale = () => {
+      const match = location.search.match(/(?<==)[a-zA-Z]{2}/)
 
-    const localeGids = {
-      pl: '288038175',
-      en: '35753055'
+      return (match[0] || navigator.language || navigator.userLanguage).split('-')[0]
     }
 
-    const imagesGid = 1866743414
+    const config = {
+      localeGids: {
+        pl: 288038175,
+        en: 35753055
+      },
+      imagesGid: 1866743414,
+      locale: getLocale(),
+      spreadsheetId: '2PACX-1vRq2HxY-FYmQrcjCsB015FGey51cT3fMV28ED2qjnTzPAjerJitb3YqzzZsIVxzj1G26B1KvfEt5r6D',
+      spreadsheetUrl: (gid) => `https://docs.google.com/spreadsheets/d/e/${config.spreadsheetId}/pub?output=tsv&gid=${gid}`
+    }
 
-    const locale = (navigator.language || navigator.userLanguage).split('-')[0]
+    const { createApp, ref } = Vue
 
     async function loadTSV(gid) {
-      const spreadsheetId = '2PACX-1vRq2HxY-FYmQrcjCsB015FGey51cT3fMV28ED2qjnTzPAjerJitb3YqzzZsIVxzj1G26B1KvfEt5r6D'
-      const url = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?output=tsv&gid=${gid}`
-      const response = await fetch(url)
+      const response = await fetch(config.spreadsheetUrl(gid))
       const csvData = await response.text()
 
       const rows = csvData.split('\n')
@@ -51,15 +57,19 @@
 
       rows.shift()
 
-      const parsedData = rows.map(row => {
+      parseData(rows, headers)
+
+      return parseData(rows, headers)
+    }
+
+    const parseData = (rows, headers) => {
+      return rows.map(row => {
         const values = row.split('\t').map(value => value.trim())
         return headers.reduce((obj, header, index) => {
           obj[header] = values[index]
           return obj
         }, {})
       })
-
-      return parsedData
     }
 
     const toggleFullImage = () => {
@@ -125,11 +135,11 @@
         const specs = ref([])
         const images = ref([])
 
-        loadTSV(localeGids[locale]).then(data => {
+        loadTSV(config.localeGids[config.locale]).then(data => {
           specs.value = data
         })
 
-        loadTSV(imagesGid).then(data => {
+        loadTSV(config.imagesGid).then(data => {
           images.value = data.map(image => image.url)
         })
 
