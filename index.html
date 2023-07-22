@@ -10,21 +10,18 @@
 
 <body class="text-white bg-black p-16">
   <div id="app">
-    <image-container>
-      <div class="mr-8 ml-48 w-auto cursor-pointer">
-        <div class="triangle-left" @click="navImage('previous')"></div>
-      </div>
+    <image-container v-if="imageSelected">
+      <image-nav-component direction="previous" @nav-image="navImage"></image-nav-component>
 
       <div>
-        <img id="full-image" class="rounded-lg cursor-pointer select-none" @click="toggleFullImage" />
+        <img id="full-image" :src="selectedImage" class="rounded-lg cursor-pointer select-none"
+          @click="toggleFullImage" />
       </div>
 
-      <div class="ml-8 mr-48 w-auto cursor-pointer">
-        <div class="triangle-right" @click="navImage('next')"></div>
-      </div>
+      <image-nav-component direction="next" @nav-image="navImage"></image-nav-component>
     </image-container>
 
-    <div id="main-container">
+    <div id="main-container" v-if="!imageSelected">
       <logo-component></logo-component>
 
       <image-wrapper>
@@ -43,7 +40,7 @@
     const getLocale = () => {
       const match = location.search.match(/(?<==)[a-zA-Z]{2}/)
 
-      return ( match && match[0] || navigator.language || navigator.userLanguage).split('-')[0]
+      return (match && match[0] || navigator.language || navigator.userLanguage).split('-')[0]
     }
 
     const config = {
@@ -70,10 +67,28 @@
 
     const ImageContainer = defineComponent({
       template: `
-        <div id="image-container" class="hidden flex fixed inset-0 items-center justify-center">
+        <div id="image-container" class="flex fixed inset-0 items-center justify-center">
           <slot></slot>
         </div>
       `
+    })
+
+    const ImageNavComponent = defineComponent({
+      props: ['direction'],
+      template: `
+          <div class="w-auto cursor-pointer">
+            <div :class="directionClass" @click="this.$emit('nav-image', direction)"></div>
+          </div>
+        `,
+      setup(props) {
+        const directionClass = ref('')
+        const direction = ref(props.direction)
+        directionClass.value = props.direction === 'previous' ? 'triangle-previous' : 'triangle-next'
+
+        return {
+          directionClass, direction
+        }
+      }
     })
 
     const LogoComponent = defineComponent({
@@ -105,6 +120,8 @@
       setup() {
         const specs = ref([])
         const images = ref([])
+        const selectedImage = ref(null)
+        const imageSelected = ref(false)
 
         const loadTSV = async (gid) => {
           const response = await fetch(config.spreadsheetUrl(gid))
@@ -130,9 +147,8 @@
         }
 
         const toggleFullImage = () => {
-          document.getElementById('main-container').classList.toggle('hidden')
-          document.getElementById('image-container').classList.toggle('hidden')
-          document.getElementById('full-image').src = event.target.src
+          selectedImage.value = event.target.src
+          imageSelected.value = !imageSelected.value
         }
 
         const getElement = (array, currentElement, direction) => {
@@ -155,9 +171,8 @@
 
 
         const navImage = (direction) => {
-          const selectedImage = document.getElementById('full-image')
-          const nextImage = getElement(images.value, selectedImage.src, direction)
-          selectedImage.src = nextImage
+          const nextImage = getElement(images.value, selectedImage.value, direction)
+          selectedImage.value = nextImage
         }
 
         loadTSV(config.localeGids[config.locale]).then(data => {
@@ -169,7 +184,7 @@
         })
 
         return {
-          specs, images, toggleFullImage, navImage, getElement
+          specs, images, toggleFullImage, navImage, getElement, selectedImage, imageSelected
         }
       }
     })
@@ -180,23 +195,24 @@
     app.component('image-wrapper', ImageWrapper)
     app.component('image-component', ImageComponent)
     app.component('image-container', ImageContainer)
+    app.component('image-nav-component', ImageNavComponent)
 
     app.mount('#app')
   </script>
   <style>
-    .triangle-left,
-    .triangle-right {
+    .triangle-previous,
+    .triangle-next {
       width: 0;
       height: 0;
       border-top: 50px solid transparent;
       border-bottom: 50px solid transparent;
     }
 
-    .triangle-left {
+    .triangle-previous {
       border-right: 86.6px solid lightgray;
     }
 
-    .triangle-right {
+    .triangle-next {
       border-left: 86.6px solid lightgray;
     }
 
