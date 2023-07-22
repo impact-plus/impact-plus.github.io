@@ -12,6 +12,10 @@
   <div id="app">
     <logo-component></logo-component>
 
+    <image-wrapper>
+      <image-component v-for="image in images" :src="image"></image-component>
+    </image-wrapper>
+
     <specs-wrapper>
       <row-component v-for="spec in specs" :label="spec.label" :description="spec.description">
         {{ spec.value }}
@@ -27,11 +31,12 @@
       en: '35753055'
     }
 
-    const locale = navigator.language || navigator.userLanguage
+    const imagesGid = 1866743414
 
-    async function loadTSV(path) {
+    const locale = (navigator.language || navigator.userLanguage).split('-')[0]
+
+    async function loadTSV(gid) {
       const spreadsheetId = '2PACX-1vRq2HxY-FYmQrcjCsB015FGey51cT3fMV28ED2qjnTzPAjerJitb3YqzzZsIVxzj1G26B1KvfEt5r6D'
-      const gid = localeGids[locale] || '35753055'
       const url = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?output=tsv&gid=${gid}`
       const response = await fetch(url)
       const csvData = await response.text()
@@ -51,6 +56,14 @@
       })
 
       return parsedData
+    }
+
+    const ImageWrapper = {
+      template: `<div class="grid grid-cols-3 gap-4 mb-12"><slot></slot></div>`
+    }
+    const ImageComponent = {
+      props: ['src'],
+      template: `<div><img :src="src" class="rounded-lg" /></div>`
     }
 
     const LogoComponent = {
@@ -81,13 +94,18 @@
     const app = createApp({
       setup() {
         const specs = ref([])
+        const images = ref([])
 
-        loadTSV('specs').then(data => {
+        loadTSV(localeGids[locale]).then(data => {
           specs.value = data
         })
 
+        loadTSV(imagesGid).then(data => {
+          images.value = data.map(image => image.url)
+        })
+
         return {
-          specs
+          specs, images
         }
       }
     })
@@ -95,6 +113,8 @@
     app.component('logo-component', LogoComponent)
     app.component('row-component', RowComponent)
     app.component('specs-wrapper', SpecsWrapper)
+    app.component('image-wrapper', ImageWrapper)
+    app.component('image-component', ImageComponent)
 
     app.mount('#app')
   </script>
