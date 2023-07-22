@@ -10,13 +10,13 @@
 
 <body class="text-white bg-black p-16">
   <div id="app">
-    <image-container></image-container>
+    <image-container @click="toggleFullImage"></image-container>
 
     <div id="main-container">
       <logo-component></logo-component>
 
       <image-wrapper>
-        <image-component v-for="image in images" :src="image" :handler="toggleFullImage"></image-component>
+        <image-component v-for="image in images" :src="image" @click="toggleFullImage"></image-component>
       </image-wrapper>
 
       <specs-wrapper>
@@ -32,12 +32,6 @@
       const match = location.search.match(/(?<==)[a-zA-Z]{2}/)
 
       return (match[0] || navigator.language || navigator.userLanguage).split('-')[0]
-    }
-
-    const toggleFullImage = () => {
-      document.getElementById('main-container').classList.toggle('hidden')
-      document.getElementById('image-container').classList.toggle('hidden')
-      document.getElementById('full-image').src = event.target.src
     }
 
     const config = {
@@ -59,26 +53,19 @@
 
     const ImageComponent = defineComponent({
       props: ['src'],
-      template: `<div><img :src="src" class="rounded-lg cursor-pointer" @click="handleClick"/></div>`,
-      setup(props) {
-        const handleClick = () => toggleFullImage()
-
-        return {
-          handleClick
-        }
-      }
+      template: `<div><img :src="src" class="rounded-lg cursor-pointer" /></div>`
     })
 
     const ImageContainer = defineComponent({
       template: `
         <div id="image-container" class="hidden flex fixed inset-0 z-100 items-center">
-          <div class="ml-48 w-auto text-9xl font-bold cursor-pointer">
+          <div class="ml-48 w-auto cursor-pointer">
             <div class="triangle-left"></div>
           </div>
           <div @click="handleClick" class="mx-auto">
             <img id="full-image" class="h-screen object-contain cursor-pointer" />
           </div>
-          <div class="mr-48 w-auto text-9xl font-bold cursor-pointer">
+          <div class="mr-48 w-auto cursor-pointer">
             <div class="triangle-right"></div>
           </div>
         </div>
@@ -145,6 +132,12 @@
           })
         }
 
+        const toggleFullImage = () => {
+          document.getElementById('main-container').classList.toggle('hidden')
+          document.getElementById('image-container').classList.toggle('hidden')
+          document.getElementById('full-image').src = event.target.src
+        }
+
         loadTSV(config.localeGids[config.locale]).then(data => {
           specs.value = data
         })
@@ -154,7 +147,7 @@
         })
 
         return {
-          specs, images
+          specs, images, toggleFullImage
         }
       }
     })
@@ -169,7 +162,8 @@
     app.mount('#app')
   </script>
   <style>
-    .triangle-left, .triangle-right {
+    .triangle-left,
+    .triangle-right {
       width: 0;
       height: 0;
       border-top: 50px solid transparent;
