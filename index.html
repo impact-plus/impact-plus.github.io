@@ -47,35 +47,6 @@
 
     const { createApp, ref } = Vue
 
-    const loadTSV = async (gid) => {
-      const response = await fetch(config.spreadsheetUrl(gid))
-      const csvData = await response.text()
-
-      const rows = csvData.split('\n')
-
-      return parseData(rows)
-    }
-
-    const parseData = (rows) => {
-      const headers = rows[0].split('\t').map(header => header.trim())
-
-      rows.shift()
-
-      return rows.map(row => {
-        const values = row.split('\t').map(value => value.trim())
-        return headers.reduce((obj, header, index) => {
-          obj[header] = values[index]
-          return obj
-        }, {})
-      })
-    }
-
-    const toggleFullImage = () => {
-      document.getElementById('main-container').classList.toggle('hidden')
-      document.getElementById('image-container').classList.toggle('hidden')
-      document.getElementById('full-image').src = event.target.src
-    }
-
     const ImageWrapper = {
       template: `<div class="grid grid-cols-3 gap-4 mb-12"><slot></slot></div>`
     }
@@ -132,6 +103,35 @@
       setup() {
         const specs = ref([])
         const images = ref([])
+
+        const loadTSV = async (gid) => {
+          const response = await fetch(config.spreadsheetUrl(gid))
+          const csvData = await response.text()
+
+          const rows = csvData.split('\n')
+
+          return parseData(rows)
+        }
+
+        const parseData = (rows) => {
+          const headers = rows[0].split('\t').map(header => header.trim())
+
+          rows.shift()
+
+          return rows.map(row => {
+            const values = row.split('\t').map(value => value.trim())
+            return headers.reduce((obj, header, index) => {
+              obj[header] = values[index]
+              return obj
+            }, {})
+          })
+        }
+
+        const toggleFullImage = () => {
+          document.getElementById('main-container').classList.toggle('hidden')
+          document.getElementById('image-container').classList.toggle('hidden')
+          document.getElementById('full-image').src = event.target.src
+        }
 
         loadTSV(config.localeGids[config.locale]).then(data => {
           specs.value = data
