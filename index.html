@@ -73,8 +73,12 @@
 
     const ImageContainer = defineComponent({
       template: `
-        <div id="image-container" @click="handleClick" class="fixed inset-0 z-100 hidden">
-          <img id="full-image" class="w-full h-full object-contain cursor-pointer" />
+        <div id="image-container" class="hidden flex fixed inset-0 z-100 items-center">
+          <div class="w-auto">sdsds</div>
+          <div @click="handleClick" class="mx-auto">
+            <img id="full-image" class="h-screen object-contain cursor-pointer" />
+          </div>
+          <div class="w-auto">sdsds</div>
         </div>
       `,
       setup() {
