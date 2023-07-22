@@ -23,18 +23,19 @@
     const { createApp, ref } = Vue
 
     async function loadCSV(path) {
-      const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRq2HxY-FYmQrcjCsB015FGey51cT3fMV28ED2qjnTzPAjerJitb3YqzzZsIVxzj1G26B1KvfEt5r6D/pub?output=csv'
+      const spreadsheetId = '2PACX-1vRq2HxY-FYmQrcjCsB015FGey51cT3fMV28ED2qjnTzPAjerJitb3YqzzZsIVxzj1G26B1KvfEt5r6D'
+      const url = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?output=tsv`
       const response = await fetch(url)
       const csvData = await response.text()
 
       const rows = csvData.split('\n')
 
-      const headers = rows[0].replace(/;/g, '').split(',').map(header => header.trim())
+      const headers = rows[0].replace(/;/g, '').split('\t').map(header => header.trim())
 
       rows.shift()
 
       const parsedData = rows.map(row => {
-        const values = row.replace(/;/g, '').split(',').map(value => value.trim())
+        const values = row.replace(/;/g, '').split('\t').map(value => value.trim())
         return headers.reduce((obj, header, index) => {
           obj[header] = values[index]
           return obj
