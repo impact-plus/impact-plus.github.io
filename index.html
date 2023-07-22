@@ -22,7 +22,9 @@
     </image-container>
 
     <div id="main-container" v-if="!imageSelected">
-      <logo-component></logo-component>
+      <logo-component>
+        <language-selection></language-selection>
+      </logo-component>
 
       <image-wrapper>
         <image-component v-for="image in images" :src="image" @click="toggleFullImage"></image-component>
@@ -91,10 +93,20 @@
       }
     })
 
+    const LanguageSelection = defineComponent({
+      template: `
+        <div>
+          <a href="?locale=pl" class="text-white mr-2">PL</a>
+          <a href="?locale=en" class="text-white">EN</a>
+        </div>
+      `
+    })
+
     const LogoComponent = defineComponent({
       template: `
         <div class="w-full bg-blue-500 p-8 mb-4 rounded-lg">
-          <h1 class="text-4xl text-white">IMPACT+</h1>
+          <div><h1 class="text-4xl text-white">IMPACT+</h1></div>
+          <slot></slot>
         </div>
       `
     })
@@ -195,6 +207,7 @@
     app.component('image-component', ImageComponent)
     app.component('image-container', ImageContainer)
     app.component('image-nav-component', ImageNavComponent)
+    app.component('language-selection', LanguageSelection)
 
     app.mount('#app')
   </script>
