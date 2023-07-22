@@ -23,14 +23,15 @@
 
       const rows = csvData.split('\n')
 
-      const headers = rows[0].replace(/;/g, '').split(',')
+      const headers = rows[0].replace(/;/g, '').split(',').map(header => header.trim())
 
       rows.shift()
 
       const parsedData = rows.map(row => {
-        const values = row.replace(/;/g, '').split(',')
+        const values = row.replace(/;/g, '').split(',').map(value => value.trim())
         return headers.reduce((obj, header, index) => {
           obj[header] = values[index]
+          debugger
           return obj
         }, {})
       })
