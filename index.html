@@ -126,7 +126,6 @@
         const loadTSV = async (gid) => {
           const response = await fetch(config.spreadsheetUrl(gid))
           const csvData = await response.text()
-
           const rows = csvData.split('\n')
 
           return parseData(rows)
