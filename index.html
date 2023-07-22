@@ -34,6 +34,12 @@
       return (match[0] || navigator.language || navigator.userLanguage).split('-')[0]
     }
 
+    const toggleFullImage = () => {
+      document.getElementById('main-container').classList.toggle('hidden')
+      document.getElementById('image-container').classList.toggle('hidden')
+      document.getElementById('full-image').src = event.target.src
+    }
+
     const config = {
       localeGids: {
         pl: 288038175,
@@ -49,63 +55,63 @@
 
     const ImageWrapper = defineComponent({
       template: `<div class="grid grid-cols-3 gap-4 mb-12"><slot></slot></div>`
-    });
+    })
 
     const ImageComponent = defineComponent({
       props: ['src'],
       template: `<div><img :src="src" class="rounded-lg cursor-pointer" @click="handleClick"/></div>`,
       setup(props) {
         const handleClick = () => {
-          toggleFullImage();
-        };
+          toggleFullImage()
+        }
 
         return {
           handleClick
-        };
+        }
       }
-    });
+    })
 
     const ImageContainer = defineComponent({
       template: `
-    <div id="image-container" @click="handleClick" class="fixed inset-0 z-100 hidden">
-      <img id="full-image" class="w-full h-full object-contain cursor-pointer" />
-    </div>
-  `,
+        <div id="image-container" @click="handleClick" class="fixed inset-0 z-100 hidden">
+          <img id="full-image" class="w-full h-full object-contain cursor-pointer" />
+        </div>
+      `,
       setup() {
         const handleClick = () => {
-          toggleFullImage();
-        };
+          toggleFullImage()
+        }
 
         return {
           handleClick
-        };
+        }
       }
-    });
+    })
 
     const LogoComponent = defineComponent({
       template: `
-    <div class="w-full bg-blue-500 p-8 mb-4 rounded-lg">
-      <h1 class="text-4xl text-white">IMPACT+</h1>
-    </div>
-  `
-    });
+        <div class="w-full bg-blue-500 p-8 mb-4 rounded-lg">
+          <h1 class="text-4xl text-white">IMPACT+</h1>
+        </div>
+      `
+    })
 
     const RowComponent = defineComponent({
       props: ['label', 'description'],
       template: `
-    <div>
-      <strong class="text-2xl text-blue-500 float-right uppercase">{{ label }}</strong>
-    </div>
-    <div class="border-l-4 pl-2">
-      <p class="text-2xl font-thin"><slot></slot></p>
-      <em class="text-gray-400">{{ description }}</em>
-    </div>
-  `
-    });
+        <div>
+          <strong class="text-2xl text-blue-500 float-right uppercase">{{ label }}</strong>
+        </div>
+        <div class="border-l-4 pl-2">
+          <p class="text-2xl font-thin"><slot></slot></p>
+          <em class="text-gray-400">{{ description }}</em>
+        </div>
+      `
+    })
 
     const SpecsWrapper = defineComponent({
       template: `<div class="grid grid-cols-2 gap-4"><slot></slot></div>`
-    });
+    })
 
     const app = createApp({
       setup() {
@@ -133,12 +139,6 @@
               return obj
             }, {})
           })
-        }
-
-        const toggleFullImage = () => {
-          document.getElementById('main-container').classList.toggle('hidden')
-          document.getElementById('image-container').classList.toggle('hidden')
-          document.getElementById('full-image').src = event.target.src
         }
 
         loadTSV(config.localeGids[config.locale]).then(data => {
