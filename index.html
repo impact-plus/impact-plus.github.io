@@ -61,9 +61,7 @@
       props: ['src'],
       template: `<div><img :src="src" class="rounded-lg cursor-pointer" @click="handleClick"/></div>`,
       setup(props) {
-        const handleClick = () => {
-          toggleFullImage()
-        }
+        const handleClick = () => toggleFullImage()
 
         return {
           handleClick
@@ -78,9 +76,7 @@
         </div>
       `,
       setup() {
-        const handleClick = () => {
-          toggleFullImage()
-        }
+        const handleClick = () => toggleFullImage()
 
         return {
           handleClick
