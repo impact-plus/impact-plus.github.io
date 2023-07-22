@@ -11,7 +11,6 @@
 <body class="text-white bg-black">
   <div id="app">
     <logo-component></logo-component>
-    <pre>{{ specs }}</pre>
 
     <specs-wrapper>
       <row-component v-for="spec in specs" :label="spec.label" :description="spec.description">
@@ -24,7 +23,8 @@
     const { createApp, ref } = Vue
 
     async function loadCSV(path) {
-      const response = await fetch(`http://127.0.0.1:8080/${path}.csv`)
+      const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRq2HxY-FYmQrcjCsB015FGey51cT3fMV28ED2qjnTzPAjerJitb3YqzzZsIVxzj1G26B1KvfEt5r6D/pub?output=csv'
+      const response = await fetch(url)
       const csvData = await response.text()
 
       const rows = csvData.split('\n')
