@@ -10,8 +10,8 @@
 
 <body class="text-white bg-black p-16">
   <div id="app">
-    <!-- <div id="image-container" class="fixed inset-0 z-100 hidden">Foobar</div> -->
     <image-container></image-container>
+
     <div id="main-container">
       <logo-component></logo-component>
 
@@ -62,26 +62,35 @@
       return parsedData
     }
 
+    const toggleFullImage = () => {
+      document.getElementById('main-container').classList.toggle('hidden')
+      document.getElementById('image-container').classList.toggle('hidden')
+      document.getElementById('full-image').src = event.target.src
+    }
+
     const ImageWrapper = {
       template: `<div class="grid grid-cols-3 gap-4 mb-12"><slot></slot></div>`
     }
+
     const ImageComponent = {
       props: ['src'],
       template: `<div><img :src="src" class="rounded-lg" @click="handleClick"/></div>`,
       methods: {
         handleClick() {
-          document.getElementById('main-container').classList.add('hidden')
-          document.getElementById('image-container').classList.remove('hidden')
+          toggleFullImage()
         }
       }
     }
 
     const ImageContainer = {
-      template: `<div id="image-container" @click="handleClick" class="fixed inset-0 z-100 hidden"><slot></slot></div>`,
+      template: `
+        <div id="image-container" @click="handleClick" class="fixed inset-0 z-100 hidden">
+          <img id="full-image" class="w-full h-full object-contain" />
+        </div>
+      `,
       methods: {
         handleClick() {
-          document.getElementById('image-container').classList.add('hidden')
-          document.getElementById('main-container').classList.remove('hidden')
+          toggleFullImage()
         }
       }
     }
