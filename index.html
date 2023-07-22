@@ -16,7 +16,7 @@
       <logo-component></logo-component>
 
       <image-wrapper>
-        <image-component v-for="image in images" :src="image"></image-component>
+        <image-component v-for="image in images" :src="image" :handler="toggleFullImage"></image-component>
       </image-wrapper>
 
       <specs-wrapper>
@@ -45,59 +45,67 @@
       spreadsheetUrl: (gid) => `https://docs.google.com/spreadsheets/d/e/${config.spreadsheetId}/pub?output=tsv&gid=${gid}`
     }
 
-    const { createApp, ref } = Vue
+    const { createApp, ref, defineComponent } = Vue
 
-    const ImageWrapper = {
+    const ImageWrapper = defineComponent({
       template: `<div class="grid grid-cols-3 gap-4 mb-12"><slot></slot></div>`
-    }
+    });
 
-    const ImageComponent = {
+    const ImageComponent = defineComponent({
       props: ['src'],
       template: `<div><img :src="src" class="rounded-lg cursor-pointer" @click="handleClick"/></div>`,
-      methods: {
-        handleClick() {
-          toggleFullImage()
-        }
+      setup(props) {
+        const handleClick = () => {
+          toggleFullImage();
+        };
+
+        return {
+          handleClick
+        };
       }
-    }
+    });
 
-    const ImageContainer = {
+    const ImageContainer = defineComponent({
       template: `
-        <div id="image-container" @click="handleClick" class="fixed inset-0 z-100 hidden">
-          <img id="full-image" class="w-full h-full object-contain cursor-pointer" />
-        </div>
-      `,
-      methods: {
-        handleClick() {
-          toggleFullImage()
-        }
+    <div id="image-container" @click="handleClick" class="fixed inset-0 z-100 hidden">
+      <img id="full-image" class="w-full h-full object-contain cursor-pointer" />
+    </div>
+  `,
+      setup() {
+        const handleClick = () => {
+          toggleFullImage();
+        };
+
+        return {
+          handleClick
+        };
       }
-    }
+    });
 
-    const LogoComponent = {
+    const LogoComponent = defineComponent({
       template: `
-        <div class="w-full bg-blue-500 p-8 mb-4 rounded-lg">
-          <h1 class="text-4xl text-white">IMPACT+</h1>
-        </div>
-      `
-    }
+    <div class="w-full bg-blue-500 p-8 mb-4 rounded-lg">
+      <h1 class="text-4xl text-white">IMPACT+</h1>
+    </div>
+  `
+    });
 
-    const RowComponent = {
+    const RowComponent = defineComponent({
       props: ['label', 'description'],
       template: `
-        <div>
-          <strong class="text-2xl text-blue-500 float-right uppercase">{{ label }}</strong>
-        </div>
-        <div class="border-l-4 pl-2">
-          <p class="text-2xl font-thin"><slot></slot></p>
-          <em class="text-gray-400">{{ description }}</em>
-        </div>
-      `
-    }
+    <div>
+      <strong class="text-2xl text-blue-500 float-right uppercase">{{ label }}</strong>
+    </div>
+    <div class="border-l-4 pl-2">
+      <p class="text-2xl font-thin"><slot></slot></p>
+      <em class="text-gray-400">{{ description }}</em>
+    </div>
+  `
+    });
 
-    const SpecsWrapper = {
+    const SpecsWrapper = defineComponent({
       template: `<div class="grid grid-cols-2 gap-4"><slot></slot></div>`
-    }
+    });
 
     const app = createApp({
       setup() {
