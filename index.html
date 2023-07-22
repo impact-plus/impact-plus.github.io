@@ -10,7 +10,17 @@
 
 <body class="text-white bg-black p-16">
   <div id="app">
-    <image-container @click="toggleFullImage"></image-container>
+    <image-container>
+      <div class="ml-48 w-auto cursor-pointer">
+        <div class="triangle-left"></div>
+      </div>
+
+      <image-component @click="toggleFullImage" id="full-image"></image-component>
+
+      <div class="mr-48 w-auto cursor-pointer">
+        <div class="triangle-right"></div>
+      </div>
+    </image-container>
 
     <div id="main-container">
       <logo-component></logo-component>
@@ -52,31 +62,16 @@
     })
 
     const ImageComponent = defineComponent({
-      props: ['src'],
-      template: `<div><img :src="src" class="rounded-lg cursor-pointer" /></div>`
+      props: ['src', 'id'],
+      template: `<div><img :src="src" :id="id" class="rounded-lg cursor-pointer" /></div>`
     })
 
     const ImageContainer = defineComponent({
       template: `
-        <div id="image-container" class="hidden flex fixed inset-0 z-100 items-center">
-          <div class="ml-48 w-auto cursor-pointer">
-            <div class="triangle-left"></div>
-          </div>
-          <div @click="handleClick" class="mx-auto">
-            <img id="full-image" class="h-screen object-contain cursor-pointer" />
-          </div>
-          <div class="mr-48 w-auto cursor-pointer">
-            <div class="triangle-right"></div>
-          </div>
+        <div id="image-container" class="hidden flex fixed inset-0 items-center">
+          <slot></slot>
         </div>
-      `,
-      setup() {
-        const handleClick = () => toggleFullImage()
-
-        return {
-          handleClick
-        }
-      }
+      `
     })
 
     const LogoComponent = defineComponent({
