@@ -22,21 +22,16 @@
   <script>
     const { createApp, ref } = Vue
 
-    const getLocaleGid = () => {
-      let locale = navigator.language || navigator.userLanguage
-
-      locale = locale.split('-')[0]
-
-      if (locale === 'pl') {
-        return '288038175'
-      } else {
-        return '35753055'
-      }
+    const localeGids = {
+      pl: '288038175',
+      en: '35753055'
     }
+
+    const locale = navigator.language || navigator.userLanguage
 
     async function loadTSV(path) {
       const spreadsheetId = '2PACX-1vRq2HxY-FYmQrcjCsB015FGey51cT3fMV28ED2qjnTzPAjerJitb3YqzzZsIVxzj1G26B1KvfEt5r6D'
-      const gid = getLocaleGid()
+      const gid = localeGids[locale] || '35753055'
       const url = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?output=tsv&gid=${gid}`
       const response = await fetch(url)
       const csvData = await response.text()
