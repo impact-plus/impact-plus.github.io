@@ -76,7 +76,7 @@
     const ImageNavComponent = defineComponent({
       props: ['direction'],
       template: `
-          <div class="w-auto cursor-pointer">
+          <div class="w-auto cursor-pointer m-8">
             <div :class="directionClass" @click="this.$emit('nav-image', direction)"></div>
           </div>
         `,
