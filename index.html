@@ -11,15 +11,15 @@
 <body class="text-white bg-black p-16">
   <div id="app">
     <image-container>
-      <div class="ml-48 w-auto cursor-pointer">
+      <div class="mr-8 ml-48 w-auto cursor-pointer">
         <div class="triangle-left" @click="navImage('previous')"></div>
       </div>
 
       <div>
-        <img id="full-image" class="rounded-lg cursor-pointer appearance-none" @click="toggleFullImage" />
+        <img id="full-image" class="rounded-lg cursor-pointer select-none" @click="toggleFullImage" />
       </div>
 
-      <div class="mr-48 w-auto cursor-pointer">
+      <div class="ml-8 mr-48 w-auto cursor-pointer">
         <div class="triangle-right" @click="navImage('next')"></div>
       </div>
     </image-container>
