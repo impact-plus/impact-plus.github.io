@@ -43,7 +43,7 @@
     const getLocale = () => {
       const match = location.search.match(/(?<==)[a-zA-Z]{2}/)
 
-      return (match[0] || navigator.language || navigator.userLanguage).split('-')[0]
+      return ( match && match[0] || navigator.language || navigator.userLanguage).split('-')[0]
     }
 
     const config = {
