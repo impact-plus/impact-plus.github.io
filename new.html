@@ -22,7 +22,7 @@
   <script>
     const { createApp, ref } = Vue
 
-    async function loadCSV(path) {
+    async function loadTSV(path) {
       const spreadsheetId = '2PACX-1vRq2HxY-FYmQrcjCsB015FGey51cT3fMV28ED2qjnTzPAjerJitb3YqzzZsIVxzj1G26B1KvfEt5r6D'
       const url = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?output=tsv`
       const response = await fetch(url)
@@ -74,7 +74,7 @@
       setup() {
         const specs = ref([])
 
-        loadCSV('specs').then(data => {
+        loadTSV('specs').then(data => {
           specs.value = data
         })
 
