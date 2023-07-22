@@ -12,13 +12,15 @@
   <div id="app">
     <image-container>
       <div class="ml-48 w-auto cursor-pointer">
-        <div class="triangle-left"></div>
+        <div class="triangle-left" @click="navImage('previous')"></div>
       </div>
 
-      <image-component @click="toggleFullImage" id="full-image"></image-component>
+      <div>
+        <img id="full-image" class="rounded-lg cursor-pointer appearance-none" @click="toggleFullImage" />
+      </div>
 
       <div class="mr-48 w-auto cursor-pointer">
-        <div class="triangle-right"></div>
+        <div class="triangle-right" @click="navImage('next')"></div>
       </div>
     </image-container>
 
@@ -55,7 +57,7 @@
       spreadsheetUrl: (gid) => `https://docs.google.com/spreadsheets/d/e/${config.spreadsheetId}/pub?output=tsv&gid=${gid}`
     }
 
-    const { createApp, ref, defineComponent } = Vue
+    const { createApp, ref, provide, defineComponent } = Vue
 
     const ImageWrapper = defineComponent({
       template: `<div class="grid grid-cols-3 gap-4 mb-12"><slot></slot></div>`
@@ -133,6 +135,31 @@
           document.getElementById('full-image').src = event.target.src
         }
 
+        const getElement = (array, currentElement, direction) => {
+          const currentIndex = array.indexOf(currentElement)
+          if (currentIndex === -1) {
+            return null
+          }
+
+          let newIndex
+          if (direction.toLowerCase() === 'next') {
+            newIndex = (currentIndex + 1) % array.length
+          } else if (direction.toLowerCase() === 'previous') {
+            newIndex = (currentIndex - 1 + array.length) % array.length
+          } else {
+            return null
+          }
+
+          return array[newIndex]
+        }
+
+
+        const navImage = (direction) => {
+          const selectedImage = document.getElementById('full-image')
+          const nextImage = getElement(images.value, selectedImage.src, direction)
+          selectedImage.src = nextImage
+        }
+
         loadTSV(config.localeGids[config.locale]).then(data => {
           specs.value = data
         })
@@ -142,7 +169,7 @@
         })
 
         return {
-          specs, images, toggleFullImage
+          specs, images, toggleFullImage, navImage, getElement
         }
       }
     })
