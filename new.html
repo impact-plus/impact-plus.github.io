@@ -30,12 +30,12 @@
 
       const rows = csvData.split('\n')
 
-      const headers = rows[0].replace(/;/g, '').split('\t').map(header => header.trim())
+      const headers = rows[0].split('\t').map(header => header.trim())
 
       rows.shift()
 
       const parsedData = rows.map(row => {
-        const values = row.replace(/;/g, '').split('\t').map(value => value.trim())
+        const values = row.split('\t').map(value => value.trim())
         return headers.reduce((obj, header, index) => {
           obj[header] = values[index]
           return obj
