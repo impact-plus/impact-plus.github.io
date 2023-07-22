@@ -10,17 +10,21 @@
 
 <body class="text-white bg-black p-16">
   <div id="app">
-    <logo-component></logo-component>
+    <!-- <div id="image-container" class="fixed inset-0 z-100 hidden">Foobar</div> -->
+    <image-container></image-container>
+    <div id="main-container">
+      <logo-component></logo-component>
 
-    <image-wrapper>
-      <image-component v-for="image in images" :src="image"></image-component>
-    </image-wrapper>
+      <image-wrapper>
+        <image-component v-for="image in images" :src="image"></image-component>
+      </image-wrapper>
 
-    <specs-wrapper>
-      <row-component v-for="spec in specs" :label="spec.label" :description="spec.description">
-        {{ spec.value }}
-      </row-component>
-    </specs-wrapper>
+      <specs-wrapper>
+        <row-component v-for="spec in specs" :label="spec.label" :description="spec.description">
+          {{ spec.value }}
+        </row-component>
+      </specs-wrapper>
+    </div>
   </div>
 
   <script>
@@ -63,7 +67,23 @@
     }
     const ImageComponent = {
       props: ['src'],
-      template: `<div><img :src="src" class="rounded-lg" /></div>`
+      template: `<div><img :src="src" class="rounded-lg" @click="handleClick"/></div>`,
+      methods: {
+        handleClick() {
+          document.getElementById('main-container').classList.add('hidden')
+          document.getElementById('image-container').classList.remove('hidden')
+        }
+      }
+    }
+
+    const ImageContainer = {
+      template: `<div id="image-container" @click="handleClick" class="fixed inset-0 z-100 hidden"><slot></slot></div>`,
+      methods: {
+        handleClick() {
+          document.getElementById('image-container').classList.add('hidden')
+          document.getElementById('main-container').classList.remove('hidden')
+        }
+      }
     }
 
     const LogoComponent = {
@@ -115,9 +135,17 @@
     app.component('specs-wrapper', SpecsWrapper)
     app.component('image-wrapper', ImageWrapper)
     app.component('image-component', ImageComponent)
+    app.component('image-container', ImageContainer)
 
     app.mount('#app')
   </script>
+
+  <style>
+    #image-contaner {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
 </body>
 
 </html>
