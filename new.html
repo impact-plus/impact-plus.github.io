@@ -8,13 +8,13 @@
   <link href="https://unpkg.com/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="text-white bg-black">
   <div id="app">
     <logo-component></logo-component>
-    <pre>{{ csv }}</pre>
+    <pre>{{ specs }}</pre>
 
     <specs-wrapper>
-      <row-component v-for="spec in csv[locale]" :label="spec.label" :description="spec.description">
+      <row-component v-for="spec in specs" :label="spec.label" :description="spec.description">
         {{ spec.value }}
       </row-component>
     </specs-wrapper>
@@ -23,19 +23,9 @@
   <script>
     const { createApp, ref } = Vue
 
-    const getLocale = () => {
-      if (navigator.language == 'pl') {
-        return 'pl'
-      } else {
-        return 'en'
-      }
-    }
-
-    async function loadCSV() {
-      const response = await fetch('http://127.0.0.1:8080/test.csv')
+    async function loadCSV(path) {
+      const response = await fetch(`http://127.0.0.1:8080/${path}.csv`)
       const csvData = await response.text()
-
-      debugger
 
       const rows = csvData.split('\n')
 
@@ -81,20 +71,21 @@
 
     const app = createApp({
       setup() {
-        const csv = ref([])
-        const locale = ref(getLocale())
+        const specs = ref([])
 
-        loadCSV().then(data => {
-          csv.value = data
+        loadCSV('specs').then(data => {
+          specs.value = data
         })
 
         return {
-          csv
+          specs
         }
       }
     })
 
     app.component('logo-component', LogoComponent)
+    app.component('row-component', RowComponent)
+    app.component('specs-wrapper', SpecsWrapper)
 
     app.mount('#app')
   </script>
