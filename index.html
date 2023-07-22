@@ -72,11 +72,15 @@
     const ImageContainer = defineComponent({
       template: `
         <div id="image-container" class="hidden flex fixed inset-0 z-100 items-center">
-          <div class="ml-48 w-auto text-9xl font-bold pointer-cursor">&lt;&lt;</div>
+          <div class="ml-48 w-auto text-9xl font-bold cursor-pointer">
+            <div class="triangle-left"></div>
+          </div>
           <div @click="handleClick" class="mx-auto">
             <img id="full-image" class="h-screen object-contain cursor-pointer" />
           </div>
-          <div class="mr-48 w-auto text-9xl font-bold pointer-cursor">&gt;&gt;</div>
+          <div class="mr-48 w-auto text-9xl font-bold cursor-pointer">
+            <div class="triangle-right"></div>
+          </div>
         </div>
       `,
       setup() {
@@ -164,6 +168,22 @@
 
     app.mount('#app')
   </script>
+  <style>
+    .triangle-left, .triangle-right {
+      width: 0;
+      height: 0;
+      border-top: 50px solid transparent;
+      border-bottom: 50px solid transparent;
+    }
+
+    .triangle-left {
+      border-right: 86.6px solid lightgray;
+    }
+
+    .triangle-right {
+      border-left: 86.6px solid lightgray;
+    }
+  </style>
 </body>
 
 </html>
